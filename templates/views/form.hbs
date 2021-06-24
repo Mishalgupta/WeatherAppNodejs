@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{>headerLinks}}
+</head>
+
+<body>
+    {{>navbar}}
+    <form class="row g-3" action="/form" method="POST">
+        <div class="col-md-6">
+            <label for="inputName" class="form-label">Full Name</label>
+            <input name="fullname" type="text" class="form-control" id="inputName">
+        </div>
+        <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Email</label>
+            <input name="email" type="email" class="form-control" id="inputEmail4">
+        </div>
+        <div class="col-12">
+            <label for="inputPhone" class="form-label">Phone</label>
+            <input name="phone" type="number" class="form-control" id="inputPhone" placeholder="1234 Main St">
+        </div>
+        <div class="col-12">
+            <label for="inputPassword" class="form-label">password</label>
+            <input name="password" type="text" class="form-control" id="inputPassword" placeholder="1234 Main St">
+        </div>
+        <div class="col-12">
+            <label for="inputconformPassword" class="form-label">Conform password</label>
+            <input name="conformpassword" type="text" class="form-control" id="inputconformPfassword"
+                placeholder="1234 Main St">
+        </div>
+        <div class="col-12">
+            <button type="submit" value="Form" class="btn btn-primary">Sign in</button>
+        </div>
+    </form>
+    <!-- footer code -->
+    {{>footer}}
+</body>
+
+</html>
