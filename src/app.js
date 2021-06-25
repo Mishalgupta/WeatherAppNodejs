@@ -9,7 +9,7 @@ require('dotenv').config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-console.log(process.env.SECRET_KEY);
+// console.log(process.env.SECRET_KEY);
 
 require("./db/conn");
 
@@ -34,6 +34,17 @@ app.post("/form", async (req, res) => {
             //middleware for user authentication JWT
             const token = await registerEmployee.generateAuthToken();
             console.log("the token part: " + token);
+
+
+            // The res.cookie() function is used to set the cookie name to value.
+            // The value parameter may be a string or object converted to JSON
+            // res.cookie(name, value, [Options])
+            res.cookie("jwt", token, {
+                expires: new Date(Date.now() + 30000),
+                httpOnly: true
+            });
+            console.log(cookie);
+
             const registered = await registerEmployee.save();
             console.log("the page part: " + registered);
             res.status(201).render("index");
@@ -98,6 +109,16 @@ app.post("/login", async (req, res) => {
         //middleware for user authentication JWT
         const token = await userEmail.generateAuthToken();
         console.log("the token part: " + token);
+
+        // The res.cookie() function is used to set the cookie name to value.
+        // The value parameter may be a string or object converted to JSON
+        // res.cookie(name, value, [Options])
+        res.cookie("jwt", token, {
+            expires: new Date(Date.now() + 50000),
+            httpOnly: true,
+            // secure: true
+
+        });
 
         if (isMatch) {
             res.status(201).render("index");
