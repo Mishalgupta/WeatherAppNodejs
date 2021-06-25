@@ -4,11 +4,15 @@ const path = require('path');
 const hbs = require('hbs');
 const bcrypt = require("bcryptjs");
 const port = process.env.PORT || 8000;
+require('dotenv').config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+console.log(process.env.SECRET_KEY);
+
 require("./db/conn");
+
 const Register = require("./models/form");
 app.post("/form", async (req, res) => {
     try {
@@ -25,7 +29,13 @@ app.post("/form", async (req, res) => {
                 password: password,
                 conformpassword: cpassword
             })
-            const register = await registerEmployee.save();
+
+            console.log(registerEmployee);
+            //middleware for user authentication JWT
+            const token = await registerEmployee.generateAuthToken();
+            console.log("the token part: " + token);
+            const registered = await registerEmployee.save();
+            console.log("the page part: " + registered);
             res.status(201).render("index");
         }
         else {
@@ -85,6 +95,10 @@ app.post("/login", async (req, res) => {
         // this will procede our request if password matches
         const isMatch = await bcrypt.compare(password, userEmail.password);
 
+        //middleware for user authentication JWT
+        const token = await userEmail.generateAuthToken();
+        console.log("the token part: " + token);
+
         if (isMatch) {
             res.status(201).render("index");
         } else {
@@ -96,7 +110,7 @@ app.post("/login", async (req, res) => {
 
 })
 
-// Hashing is a one way communication
+// ***********Hashing is a one way communication***************
 // we will use here bcrypt.js to hash our passwords.
 
 // const bcrypt = require("bcryptjs");
@@ -108,6 +122,22 @@ app.post("/login", async (req, res) => {
 //     console.log(passwordMatch); // this will procede our request if password matches
 // }
 // securePassword("mishal123");
+
+
+
+// *************jwt(json web token) authentication****************
+
+// const createToken = async () => {
+//     const token = await jwt.sign({ _id: "60d4f639c490ae23bcf6bc1b" }, "kumarmishalsalonirakeshsangeetagupta", {
+//         expiresIn: "2 minutes"
+//     });
+//     console.log(token);
+
+//     //user verification if he comes back after some time to website
+//     const userVerification = await jwt.verify(token, "kumarmishalsalonirakeshsangeetagupta");
+//     console.log(userVerification);
+// }
+// createToken();
 
 app.listen(port, () => {
     console.log(`listening to the port http://localhost:${8000}`)
